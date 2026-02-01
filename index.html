@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Message for You</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff0f3;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hidden { display: none !important; }
+
+        h1 { color: #ff4d6d; font-size: 2.5rem; text-shadow: 2px 2px #fff; }
+
+        /* Stage 1 Styles */
+        .btn-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        #yesBtn { background-color: #ff4d6d; color: white; z-index: 10; }
+        #noBtn { background-color: #8a8a8a; color: white; position: absolute; }
+
+        /* Stage 2 Styles */
+        .cat-img {
+            width: 280px;
+            border-radius: 20px;
+            margin: 20px 0;
+            border: 5px solid white;
+        }
+
+        #takeItBtn {
+            background-color: #ffb703;
+            color: #000;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Stage 3 Styles */
+        .video-wrapper {
+            width: 90%;
+            max-width: 560px;
+            aspect-ratio: 16/9;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="stage1">
+        <h1>Will you be my Valentine? ❤️</h1>
+        <div class="btn-container">
+            <button id="yesBtn" onclick="goToStage2()">YES</button>
+            <button id="noBtn" onmouseover="escape()" onclick="escape()">No</button>
+        </div>
+    </div>
+
+    <div id="stage2" class="hidden">
+        <h1>YAYYY! 🥰</h1>
+        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueGZ4bm9oZzB6Z3Z4bm9oZzB6Z3Z4bm9oZzB6Z3Z4bm9oJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCtpZCZjdD1n/KzM1lAfJpx3FQp3SP2/giphy.gif" class="cat-img">
+        <p style="font-size: 1.2rem;">I have a little something for you...</p>
+        <button id="takeItBtn" onclick="goToStage3()">Please take it! 🌻</button>
+    </div>
+
+    <div id="stage3" class="hidden">
+        <h1>For You... ✨</h1>
+        <div class="video-wrapper">
+            <iframe id="valentineVideo" width="100%" height="100%" 
+                src="https://www.youtube.com/watch?v=VTsGcB1X6nQ0" 
+                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+    <script>
+        let yesSize = 1;
+        let noSize = 1;
+
+        function escape() {
+            const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
+
+            // Move the No button to a random spot
+            const x = Math.random() * (window.innerWidth - 150);
+            const y = Math.random() * (window.innerHeight - 150);
+            noBtn.style.position = "fixed";
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+
+            // Resize buttons
+            noSize -= 0.1;
+            yesSize += 0.4; // Grow faster for dramatic effect
+            
+            if (noSize < 0.3) noSize = 0.3; // Don't let it vanish completely
+
+            noBtn.style.transform = `scale(${noSize})`;
+            yesBtn.style.transform = `scale(${yesSize})`;
+        }
+
+        function goToStage2() {
+            document.getElementById('stage1').classList.add('hidden');
+            document.getElementById('stage2').classList.remove('hidden');
+        }
+
+        function goToStage3() {
+            document.getElementById('stage2').classList.add('hidden');
+            document.getElementById('stage3').classList.remove('hidden');
+            
+            // This force-starts the video when the button is clicked
+            const video = document.getElementById('valentineVideo');
+            video.src += "&autoplay=1";
+        }
+    </script>
+</body>
+</html>
