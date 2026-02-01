@@ -3,75 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Message for You</title>
+    <title>Be My Valentine?</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #fff0f3;
-            text-align: center;
+            font-family: 'Arial', sans-serif;
             overflow: hidden;
+            text-align: center;
         }
-
         .hidden { display: none !important; }
+        h1 { color: #ff4d6d; font-size: 2rem; margin-bottom: 20px; z-index: 10; }
 
-        h1 { color: #ff4d6d; font-size: 2.5rem; text-shadow: 2px 2px #fff; }
-
-        /* Stage 1 Styles */
+        /* Stage 1: The Buttons */
         .btn-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 20px;
+            width: 100%;
+            height: 100px;
+            position: relative;
         }
 
         button {
-            padding: 15px 30px;
+            padding: 15px 35px;
             font-size: 1.2rem;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.2s ease-in-out;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
         }
 
-        #yesBtn { background-color: #ff4d6d; color: white; z-index: 10; }
-        #noBtn { background-color: #8a8a8a; color: white; position: absolute; }
-
-        /* Stage 2 Styles */
-        .cat-img {
-            width: 280px;
-            border-radius: 20px;
-            margin: 20px 0;
-            border: 5px solid white;
+        #yesBtn { background-color: #ff4d6d; color: white; z-index: 20; }
+        #noBtn { 
+            background-color: #8a8a8a; 
+            color: white; 
+            position: relative; /* Changed to relative for initial view */
+            z-index: 15;
         }
 
-        #takeItBtn {
-            background-color: #ffb703;
-            color: #000;
-            animation: bounce 2s infinite;
+        /* Stage 2: The Cat */
+        .cat-container { padding: 20px; }
+        .cat-img { 
+            width: 250px; 
+            border-radius: 20px; 
+            border: 8px solid white;
+            background-color: white; 
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        #takeItBtn { background-color: #ffb703; margin-top: 20px; animation: pulse 1.5s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
-        /* Stage 3 Styles */
-        .video-wrapper {
-            width: 90%;
-            max-width: 560px;
-            aspect-ratio: 16/9;
-        }
+        .video-wrapper { width: 90%; max-width: 560px; aspect-ratio: 16/9; }
     </style>
 </head>
 <body>
@@ -79,65 +74,70 @@
     <div id="stage1">
         <h1>Will you be my Valentine? ❤️</h1>
         <div class="btn-container">
-            <button id="yesBtn" onclick="goToStage2()">YES</button>
-            <button id="noBtn" onmouseover="escape()" onclick="escape()">No</button>
+            <button id="yesBtn" onclick="showStage(2)">YES</button>
+            <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">No</button>
         </div>
     </div>
 
     <div id="stage2" class="hidden">
         <h1>YAYYY! 🥰</h1>
-        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueGZ4bm9oZzB6Z3Z4bm9oZzB6Z3Z4bm9oZzB6Z3Z4bm9oJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCtpZCZjdD1n/KzM1lAfJpx3FQp3SP2/giphy.gif" class="cat-img">
-        <p style="font-size: 1.2rem;">I have a little something for you...</p>
-        <button id="takeItBtn" onclick="goToStage3()">Please take it! 🌻</button>
+        <div class="cat-container">
+            <img src="https://media.tenor.com/79_u9y2j_oAAAAAi/cat-flower.gif" alt="Cat giving flower" class="cat-img">
+        </div>
+        <button id="takeItBtn" onclick="showStage(3)">Please take it! 🌻</button>
     </div>
 
     <div id="stage3" class="hidden">
         <h1>For You... ✨</h1>
         <div class="video-wrapper">
-            <iframe id="valentineVideo" width="100%" height="100%" 
-                src="https://www.youtube.com/watch?v=VTsGcB1X6nQ0" 
+            <iframe id="ytVideo" width="100%" height="100%" 
+                src="https://www.youtube.com/embed/CFj1HXUGhaY?start=197&end=215&enablejsapi=1" 
                 frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
             </iframe>
         </div>
     </div>
 
     <script>
-        let yesSize = 1;
-        let noSize = 1;
+        let yesScale = 1;
+        let noScale = 1;
 
-        function escape() {
-            const noBtn = document.getElementById('noBtn');
-            const yesBtn = document.getElementById('yesBtn');
+        function moveButton() {
+            const no = document.getElementById('noBtn');
+            const yes = document.getElementById('yesBtn');
 
-            // Move the No button to a random spot
-            const x = Math.random() * (window.innerWidth - 150);
-            const y = Math.random() * (window.innerHeight - 150);
-            noBtn.style.position = "fixed";
-            noBtn.style.left = x + "px";
-            noBtn.style.top = y + "px";
+            // Switch to fixed position ONLY after first interaction
+            no.style.position = 'fixed';
 
-            // Resize buttons
-            noSize -= 0.1;
-            yesSize += 0.4; // Grow faster for dramatic effect
+            // Calculate safe random coordinates
+            const maxX = window.innerWidth - no.offsetWidth;
+            const maxY = window.innerHeight - no.offsetHeight;
             
-            if (noSize < 0.3) noSize = 0.3; // Don't let it vanish completely
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
 
-            noBtn.style.transform = `scale(${noSize})`;
-            yesBtn.style.transform = `scale(${yesSize})`;
+            no.style.left = randomX + 'px';
+            no.style.top = randomY + 'px';
+
+            // Resizing logic
+            noScale -= 0.15;
+            yesScale += 0.5;
+            if (noScale < 0.2) noScale = 0.2;
+
+            no.style.transform = `scale(${noScale})`;
+            yes.style.transform = `scale(${yesScale})`;
         }
 
-        function goToStage2() {
+        function showStage(stageNum) {
             document.getElementById('stage1').classList.add('hidden');
-            document.getElementById('stage2').classList.remove('hidden');
-        }
-
-        function goToStage3() {
             document.getElementById('stage2').classList.add('hidden');
-            document.getElementById('stage3').classList.remove('hidden');
+            document.getElementById('stage3').classList.add('hidden');
             
-            // This force-starts the video when the button is clicked
-            const video = document.getElementById('valentineVideo');
-            video.src += "&autoplay=1";
+            document.getElementById('stage' + stageNum).classList.remove('hidden');
+
+            if (stageNum === 3) {
+                const video = document.getElementById('ytVideo');
+                video.src += "&autoplay=1";
+            }
         }
     </script>
 </body>
